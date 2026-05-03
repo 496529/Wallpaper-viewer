@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import filedialog
 from PIL import Image, ImageTk
 import os
+
+
 class WallpaperViewer:
     def __init__(self, root):
         self.root = root
@@ -9,41 +11,53 @@ class WallpaperViewer:
         self.root.geometry("720x620")
         self.root.configure(bg="#0d0d1a")
         self.root.resizable(True, True)
+
         self.img_array = []
         self.img_paths = []
         self.counter = 0
         self.slideshow_active = False
         self.slideshow_id = None
+
         self.setup_ui()
         self.load_default_images()
+
     def setup_ui(self):
+        # ── Title
         Label(self.root, text="🖼  Wallpaper Viewer",
               font=("Segoe UI", 18, "bold"),
               bg="#0d0d1a", fg="#c9c9ff").pack(pady=(14, 2))
+
+        # ── Counter
         self.counter_label = Label(self.root, text="0 / 0",
                                    font=("Segoe UI", 9),
                                    bg="#0d0d1a", fg="#5555aa")
         self.counter_label.pack()
+
+        # ── Image frame with glow border
         outer = Frame(self.root, bg="#3a3a7a", padx=2, pady=2)
         outer.pack(padx=30, pady=8)
         inner = Frame(outer, bg="#12122a")
         inner.pack()
+
         self.img_label = Label(inner, bg="#12122a",
                                text="No images loaded",
                                font=("Segoe UI", 13),
                                fg="#44447a", width=64, height=18)
-        self.img_label.pack(padx=4, pady=4)  
+        self.img_label.pack(padx=4, pady=4)
+
+        # ── Filename
         self.filename_label = Label(self.root, text="",
                                     font=("Segoe UI", 8),
                                     bg="#0d0d1a", fg="#55557a")
         self.filename_label.pack(pady=(0, 6))
 
+        # ── Navigation row
         nav = Frame(self.root, bg="#0d0d1a")
         nav.pack(pady=4)
         self._btn(nav, "◀  Prev",     self.prev_img,        "#6c63ff").pack(side=LEFT, padx=6)
         self._btn(nav, "Next  ▶",     self.next_img,        "#6c63ff").pack(side=LEFT, padx=6)
 
-
+        # ── Action row
         act = Frame(self.root, bg="#0d0d1a")
         act.pack(pady=4)
         self._btn(act, "➕  Add Photo",  self.add_photo,       "#22c55e").pack(side=LEFT, padx=6)
@@ -73,6 +87,7 @@ class WallpaperViewer:
         g = max(0, min(255, int(hex_color[3:5], 16) + delta))
         b = max(0, min(255, int(hex_color[5:7], 16) + delta))
         return f"#{r:02x}{g:02x}{b:02x}"
+
     def load_default_images(self):
         folder = "wallpaper_viewer_apk_images"
         if os.path.exists(folder):
@@ -149,10 +164,13 @@ class WallpaperViewer:
             self.slideshow_active = True
             self.slide_btn.config(text="⏹  Stop")
             self._run_slideshow()
+
     def _run_slideshow(self):
         if self.slideshow_active and self.img_array:
             self.next_img()
             self.slideshow_id = self.root.after(2500, self._run_slideshow)
+
+
 if __name__ == "__main__":
     root = Tk()
     WallpaperViewer(root)
